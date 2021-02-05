@@ -14,8 +14,15 @@ const auth = async(req,res,next)=>{
     const user_with_token = jwt.verify(token,process.env.JWT_KEY);
     console.log(user_with_token);
     const user = await User.findOne({_id:user_with_token._id});
-    req.profile = user;
-    next();
+    console.log(user);
+    if(!user)
+    {
+        res.status(400).send("Something Went Wrong")
+    }
+    else{
+        req.profile = user;
+        next();
+    }
     } catch (error) {
         res.send(error.message);
     }

@@ -84,6 +84,35 @@ exports.login = async (req, res) => {
 
 
 exports.auth = async (req, res) => {
-    res.send(req.profile);
+    try {
+        console.log(req.profile);
+        res.send(req.profile);
+    } catch (error) {
+        res.status(400).send(error.message)
+    }
 };
   
+
+
+exports.getAllUsers = async()=>{
+    try {
+        const users = await User.find({});
+        if(users.length<1)
+        {
+            throw new Error("No Users Found");
+        }
+        else
+        {
+            res.status(200).send(users);
+        }
+    } catch (error) {
+        if(error.message=="No User Found")
+        {
+            res.status(404).send("No Users Registered Yet")
+        }
+        else
+        {
+            res.status(400).send(error.message);
+        }
+    }
+}
