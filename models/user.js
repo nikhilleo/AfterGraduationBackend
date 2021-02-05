@@ -21,6 +21,7 @@ const userSchema = mongoose.Schema({
         type: String,
         unique: true,
         trim: true,
+        default:"",
         maxLength: 10
     },
     email: {
@@ -31,7 +32,6 @@ const userSchema = mongoose.Schema({
     },
     password: {
         type: String,
-        unique: true,
         trim: true,
         required: true,
     },
@@ -43,20 +43,17 @@ const userSchema = mongoose.Schema({
     },
     qualification: {
         type: String,
-        unique: true,
         trim: true,
         required: true
     },
     specialization: {
         type: String,
-        unique: true,
         trim: true,
         default: "",
         required: true,
     },
     other_specialization: {
         type: String,
-        unique: true,
         trim: true,
         // required: true,
         default: "",
