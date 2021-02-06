@@ -94,7 +94,7 @@ exports.auth = async (req, res) => {
   
 
 
-exports.getAllUsers = async()=>{
+exports.getAllUsers = async(req,res)=>{
     try {
         const users = await User.find({});
         if(users.length<1)
