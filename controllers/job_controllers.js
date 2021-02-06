@@ -11,6 +11,14 @@ exports.addJob = async(req,res)=>{
         {
             throw new Error("Job Description Reqeuired")
         }
+        if(!req.body.jobExp)
+        {
+            throw new Error("Job Experience Reqeuired")
+        }
+        if(!req.body.jobLoc)
+        {
+            throw new Error("Job Location Reqeuired")
+        }
         const job = await new Jobs(req.body);
         await job.save();
         res.status(201).json({"message":"Job Created","job_details":job});
@@ -20,6 +28,14 @@ exports.addJob = async(req,res)=>{
             res.status(400).send(error.message)
         }
         else if(error.message=="Job Description Reqeuired")
+        {
+            res.status(400).send(error.message)
+        } 
+        else if(error.message=="Job Experience Reqeuired")
+        {
+            res.status(400).send(error.message)
+        }
+        else if(error.message=="Job Location Reqeuired")
         {
             res.status(400).send(error.message)
         }

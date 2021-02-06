@@ -13,6 +13,16 @@ const jobsSchema = new mongoose.Schema({
         type:String,
         trim:true,
         required:true
+    },
+    jobLoc:{
+        type:String,
+        trim:true,
+        required:true
+    },
+    jobExp:{
+        type:String,
+        trim:true,
+        required:true
     }
 },{timestamps:true});
 
