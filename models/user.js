@@ -6,7 +6,6 @@ const jwt = require("jsonwebtoken");
 const userSchema = mongoose.Schema({
     name: {
         type: String,
-        unique: true,
         trim: true,
         required: true
     },
@@ -19,9 +18,7 @@ const userSchema = mongoose.Schema({
     },
     altmobile: {
         type: String,
-        unique: true,
         trim: true,
-        default:"",
         maxLength: 10
     },
     email: {
@@ -37,7 +34,6 @@ const userSchema = mongoose.Schema({
     },
     gender: {
         type: String,
-        unique: true,
         trim: true,
         required: true,
     },
