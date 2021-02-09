@@ -11,6 +11,7 @@ exports.signup = async(req, res) => {
         const phone = req.body.mobile;
         const phone1 = req.body.altmobile;
 
+        
         if (email) {
             if (!validate.isEmail(email)) {
                 throw new Error("Invalid Email");
@@ -65,9 +66,6 @@ exports.login = async (req, res) => {
       let eMail = req.body.email;
       let passWord = req.body.password;
       const user = await User.findByCredentials(eMail, passWord);
-      if (!user) {
-        throw new Error("No User Found");
-      }
       const token = await user.genAuthToken();
       res.status(200).json({
         Message: "Login Successfully",
