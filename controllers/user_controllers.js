@@ -2,6 +2,37 @@
 const User = require("../models/user")
 const validate = require("validator")
 const jwt = require("jsonwebtoken");
+const mail = require("nodemailer");
+
+
+function sendEmail(email){
+    const transporter = mail.createTransport({
+        service:"hotmail",
+        host:"smtp.office365.com",
+        auth:{
+            user:"aftergraduationck@outlook.com",
+            pass:"nikhil1008"
+        }
+    });
+    const mailOptions = {
+        from:"aftergraduationck@outlook.com",
+        to:email,
+        subject:"Registered",
+        text:"You Have Successfully Registered For After Graduation We Will Contact You As Soon As Possible Thank You For Registering"
+    }
+    transporter.sendMail(mailOptions,(err,info)=>{
+        if(err)
+        {
+            console.log(err)
+            return;
+        }
+        else
+        {
+            console.log("Sent " + info.response);
+            return;
+        }
+    })
+}
 
 exports.signup = async(req, res) => {
     try {
@@ -34,6 +65,7 @@ exports.signup = async(req, res) => {
         const gentoken = await newUser.genAuthToken();
         console.log("gentoken", gentoken);
         await newUser.save();
+        await sendEmail(req.body.email);
         res.status(201).json({
             message: "User Created",
             user: newUser,
