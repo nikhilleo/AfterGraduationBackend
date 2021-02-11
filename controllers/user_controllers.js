@@ -14,11 +14,12 @@ function sendEmail(email){
             pass:"nikhil1008"
         }
     });
+    const otp = Math.floor(Math.random(0.5) * 1000000);
     const mailOptions = {
         from:"aftergraduationck@outlook.com",
         to:email,
         subject:"Registered",
-        text:"You Have Successfully Registered For After Graduation We Will Contact You As Soon As Possible Thank You For Registering"
+        text:`You Have Successfully Registered For Verification Enter OTP ${otp}`
     }
     transporter.sendMail(mailOptions,(err,info)=>{
         if(err)
