@@ -1,11 +1,12 @@
 
 const User = require("../models/user")
+const OTP = require("../models/otp");
 const validate = require("validator")
 const jwt = require("jsonwebtoken");
 const mail = require("nodemailer");
 
 
-function sendEmail(email){
+async function sendEmail(email){
     const transporter = mail.createTransport({
         service:"hotmail",
         host:"smtp.office365.com",
@@ -21,16 +22,18 @@ function sendEmail(email){
         subject:"Registered",
         text:`You Have Successfully Registered For Verification Enter OTP ${otp}`
     }
-    transporter.sendMail(mailOptions,(err,info)=>{
+    transporter.sendMail(mailOptions,async(err,info)=>{
         if(err)
         {
             console.log(err)
+            // await OTP.findOneAndDelete({otp:Otp._id});
             return;
         }
         else
         {
             console.log("Sent " + info.response);
-            return;
+            // console.log(Otp);
+            return otp;
         }
     })
 }
@@ -66,10 +69,14 @@ exports.signup = async(req, res) => {
         const gentoken = await newUser.genAuthToken();
         console.log("gentoken", gentoken);
         await newUser.save();
-        await sendEmail(req.body.email);
+        const Otp_sent = sendEmail(req.body.email);
+        console.log(Otp_sent);
+        // const Otp = await new OTP({otp:Otp_sent});
+        // console.log("In DB:",Otp);
         res.status(201).json({
             message: "User Created",
             user: newUser,
+            // otp:Otp,
             token: gentoken,
         });
     } catch (error) {
