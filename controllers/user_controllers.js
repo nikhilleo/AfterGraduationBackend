@@ -121,6 +121,27 @@ exports.signup = async (req, res) => {
 };
 
 
+exports.verify = async(req,res)=>{
+    try {
+        if(!req.body.otp)
+        {
+            throw new Error("OTP Not Found")
+        }
+        const otp_in_db = await OTP.findById({_id:req.body.otp_id});
+        if(otp_in_db.otp==req.body.otp)
+        {
+            res.status(200).send("User Verified");
+        }
+    } catch (error) {
+        if(error.message=="OTP Not Found")
+        {
+            res.status(404).send(error.message);
+        }
+    }
+}
+
+
+
 exports.login = async (req, res) => {
     try {
         let eMail = req.body.email;
