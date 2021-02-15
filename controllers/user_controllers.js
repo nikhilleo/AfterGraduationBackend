@@ -3,6 +3,7 @@ const OTP = require("../models/otp");
 const validate = require("validator")
 const jwt = require("jsonwebtoken");
 const mail = require("nodemailer");
+const e = require("express");
 
 var OTP_CREATED;
 
@@ -16,6 +17,10 @@ async function sendEmail(email) {
         }
     });
     var otp = Math.floor(Math.random(0.5) * 1000000);
+    if(otp.length<6)
+    {
+        otp+=8;
+    }
     OTP_CREATED = otp;
     const mailOptions = {
         from: "aftergraduationck@outlook.com",
@@ -62,8 +67,10 @@ exports.signup = async (req, res) => {
         const email = req.body.email;
         const phone = req.body.mobile;
         const phone1 = req.body.altmobile;
-
-
+        if(!email)
+        {
+            throw new Error("Enter Email");
+        }
         if (email) {
             if (!validate.isEmail(email)) {
                 throw new Error("Invalid Email");
@@ -82,10 +89,10 @@ exports.signup = async (req, res) => {
                 throw new Error("Invalid Mobile Number");
             }
         }
-        const newUser = await new User(req.body);
-        const gentoken = await newUser.genAuthToken();
-        console.log("gentoken", gentoken);
-        await newUser.save();
+        // const newUser = await new User(req.body);
+        // const gentoken = await newUser.genAuthToken();
+        // console.log("gentoken", gentoken);
+        // await newUser.save();
         const otp_sent = await sendEmail(req.body.email);
         console.log(OTP_CREATED);
         // const Otp_sent = sendEmail(req.body.email);
@@ -94,10 +101,10 @@ exports.signup = async (req, res) => {
         console.log("In DB:",Otp);
         await Otp.save();
         res.status(201).json({
-            message: "User Created",
-            user: newUser,
+            message: "OTP Sent",
+            user: req.body,
             otp:Otp._id,
-            token: gentoken,
+            // token: gentoken,
         });
     } catch (error) {
         console.log(error);
@@ -121,8 +128,9 @@ exports.signup = async (req, res) => {
 };
 
 
-exports.verify = async(req,res)=>{
+exports.verify_email = async(req,res)=>{
     try {
+        console.log(req.body.user);
         if(!req.body.otp)
         {
             throw new Error("OTP Not Found")
@@ -130,12 +138,36 @@ exports.verify = async(req,res)=>{
         const otp_in_db = await OTP.findById({_id:req.body.otp_id});
         if(otp_in_db.otp==req.body.otp)
         {
-            res.status(200).send("User Verified");
+            const data = JSON.parse(req.body.user);
+            const user = await new User(data);
+            console.log(user);
+            const gentoken = await user.genAuthToken();
+            console.log("gentoken", gentoken);
+            await user.save();
+            await OTP.findByIdAndDelete({_id:otp_in_db._id});
+            res.status(201).json({
+                message: "User Created And Verified",
+                user: user,
+                otp:otp_in_db._id,
+                token: gentoken,
+            });
+        }
+        else
+        {
+            throw new Error("Wrong OTP");
         }
     } catch (error) {
         if(error.message=="OTP Not Found")
         {
             res.status(404).send(error.message);
+        }
+        else if(error.message == "Wrong OTP")
+        {
+            res.status(400).send(error.message);
+        }
+        else
+        {
+            res.status(400).send(error.message);
         }
     }
 }
