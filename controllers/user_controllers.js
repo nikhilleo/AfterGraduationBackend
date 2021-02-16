@@ -1,9 +1,9 @@
 const User = require("../models/user")
 const OTP = require("../models/otp");
 const validate = require("validator")
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const mail = require("nodemailer");
-const e = require("express");
 
 var OTP_CREATED;
 
@@ -12,8 +12,8 @@ async function sendEmail(email) {
         service: "hotmail",
         host: "smtp.office365.com",
         auth: {
-            user: "aftergraduationck@outlook.com",
-            pass: "nikhil1008"
+            user: process.env.EMAIL_USERNAME,
+            pass: process.env.EMAIL_PASSWORD
         }
     });
     var otp = Math.floor(Math.random(0.5) * 1000000);
