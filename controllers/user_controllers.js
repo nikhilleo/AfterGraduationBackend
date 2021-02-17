@@ -106,6 +106,8 @@ exports.signup = async (req, res) => {
             otp:Otp._id,
             // token: gentoken,
         });
+
+        
     } catch (error) {
         console.log(error);
         const msg = error.message;
