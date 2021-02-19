@@ -21,6 +21,22 @@ async function sendEmail(email) {
     {
         otp+=8;
     }
+    if(otp.length<5)
+    {
+        otp+=19;
+    }
+    if(otp.length<4)
+    {
+        otp+=491;
+    }
+    if(otp.length<3)
+    {
+        otp+=1562;
+    }
+    if(otp.length<2)
+    {
+        otp += 4810;
+    }
     OTP_CREATED = otp;
     const mailOptions = {
         from: "aftergraduationck@outlook.com",
