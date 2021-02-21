@@ -17,25 +17,26 @@ async function sendEmail(email) {
         }
     });
     var otp = Math.floor(Math.random(0.5) * 1000000);
-    if(otp.length<6)
+    console.log("OTP LENGTH : ",otp.toString().length)
+    if(otp.toString().length<6)
     {
         otp+=8;
     }
-    if(otp.length<5)
+    if(otp.toString().length<5)
     {
         otp+=19;
     }
-    if(otp.length<4)
+    if(otp.toString().length<4)
     {
         otp+=491;
     }
-    if(otp.length<3)
+    if(otp.toString().length<3)
     {
         otp+=1562;
     }
-    if(otp.length<2)
+    if(otp.toString().length<2)
     {
-        otp += 4810;
+        otp += 48107;
     }
     OTP_CREATED = otp;
     const mailOptions = {
@@ -105,7 +106,17 @@ exports.signup = async (req, res) => {
                 throw new Error("Invalid Mobile Number");
             }
         }
-        // const newUser = await new User(req.body);
+        const newUser = await new User(req.body);
+        const already_mobile = await User.find({mobile:req.body.mobile});
+        if(already_mobile.length > 0)
+        {   
+            throw new Error("mobile")
+        } 
+        const already_email = await User.find({email:req.body.email});
+        if(already_email.length > 0)
+        {   
+            throw new Error("email")
+        } 
         // const gentoken = await newUser.genAuthToken();
         // console.log("gentoken", gentoken);
         // await newUser.save();
@@ -129,9 +140,9 @@ exports.signup = async (req, res) => {
         const msg = error.message;
         const msg_splitted = msg.split(" ");
         console.log("Conflict", msg_splitted[11]);
-        if (msg_splitted[11] == "mobile:") {
+        if (error.message=="mobile") {
             res.status(409).send("Mobile Number Already Exist Please Try New Credentials");
-        } else if (msg_splitted[11] == "email:") {
+        } else if (error.message=="email") {
             res.status(409).send("Email Already Exist Please Try New Credentials");
         } else if (error.message == "Password Invalid") {
             res.status(409).send("Password Length Must Be Atleast 7 Characters");
