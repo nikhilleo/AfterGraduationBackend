@@ -1,6 +1,6 @@
 {
   "name": "aftergraduation-backend",
-  "version": "1.0.1",
+  "version": "1.0.",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -9,8 +9,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "engines": {
-    "node": "10.19.0",
-    "npm": ">= 7.5.4"
+          "node": "10.19.0",
+          "npm": ">= 7.5.4"
   },
   "author": "",
   "license": "ISC",
